@@ -5,10 +5,10 @@ window.onload = function() {
 	var scene_number = 0;
 	
 	var scene1 = new Array(2);
-	scene1[0] = [1,0,0,0,0,0,0,0,0,0,2];
-	scene1[1] = [1,0,0,0,0,0,0,0,0,0,0];
-	scene1[2] = [1,0,0,0,0,0,0,0,0,0,0];
-	scene1[3] = [3,0,4,4,4,4,4,4,4,4,4];
+	scene1[0] = [0,0,0,0,0,0,0,0,0,0,2];
+	scene1[1] = [0,0,0,0,0,0,0,0,0,0,0];
+	scene1[2] = [0,0,0,0,0,0,0,0,0,0,0];
+	scene1[3] = [0,0,0,0,0,4,4,4,4,4,4];
 	
 	Crafty.init(704, 256);
 	Crafty.canvas.init();
@@ -30,6 +30,37 @@ window.onload = function() {
 	Crafty.sprite(64, "resources/sprites/digsprite.png", { 
 		digsprite: [0,0]
 	});
+	Crafty.sprite(64, "resources/sprites/dialog.png", { 
+		dialog1: [0,0],
+		dialog2: [1,0],
+		dialog3: [2,0],
+		dialog4: [3,0],
+		dialog5: [4,0],
+		dialog6: [5,0],
+		dialog7: [0,1],
+		dialog8: [1,1],
+		dialog9: [2,1],
+		dialog10: [3,1],
+		dialog11: [4,1],
+		dialog12: [5,1],
+		
+		dialog13: [0,2],
+		dialog14: [1,2],
+		dialog15: [2,2],
+		dialog16: [3,2],
+		dialog17: [4,2],
+		dialog18: [5,2],
+		
+		dialog19: [0,3],
+		dialog20: [1,3],
+		dialog21: [2,3],
+		dialog22: [3,3],
+		dialog23: [4,3],
+		dialog24: [5,3],
+	
+		
+		
+	});
 
 	function generateWorld() {
 		
@@ -50,10 +81,10 @@ window.onload = function() {
 						var rock = Crafty.e("2D, Canvas, border1,solid,collision").attr({x: i * 64, y: j * 64});
 						break;
 					case 2:						
-						var rock = Crafty.e("2D, Canvas, ship,solid,collision").attr({x: i * 64, y: j * 64});
+						var rock = Crafty.e("2D, Canvas, ship, shipinterface").attr({x: i * 64, y: j * 64});
 						break;
 					case 3:						
-						var rock = Crafty.e("2D, Canvas, border2,solid,collision").attr({x: i * 64, y: j * 64});
+						var rock = Crafty.e("2D, Canvas, dialog1,solid,collision").attr({x: i * 64, y: j * 64});
 						break;
 					case 4:						
 						var rock = Crafty.e("2D, Canvas, border3").attr({x: i * 64, y: j * 64});
@@ -113,13 +144,22 @@ window.onload = function() {
 		Crafty.background("#000");
 		Crafty.e("2D, DOM, Text").attr({w: 100, h: 20, x: 150, y: 120})
 			.text("Barnabus Mars Loading..")
-			.css({"text-align": "center"});
+			.css({"text-align": "center","color":"#0xFFFFFF"});
 	});
 	
 	Crafty.scene("loading"); //automatically play the loading scene
 	
 	Crafty.scene("main", function() {
 		generateWorld();
+		
+		
+		Crafty.c('shipinterface', { 
+			init: function() {		
+				this.requires("SpriteAnimation, Collision")
+				
+				Crafty.e("2D, Canvas").attr({x: 5, y: 5, z: 1});  //Shows Oxygen Gem Sprite
+			},		
+		});
 		
 		Crafty.c('gameinterface', { 
 			init: function() {		
@@ -186,6 +226,17 @@ window.onload = function() {
 						}
 						if(this.hit('solid')){
 							this.attr({x: from.x, y:from.y});
+						}
+						if(this.hit('ship')){
+							console.log("ENTER SHIP");
+							Crafty.scene("shipinterior",function(){ 
+								Crafty.background("#000");
+		Crafty.e("2D, DOM, Text").attr({w: 100, h: 20, x: 64, y: 128})
+			.text("SHIP INTERIOR SCENE")
+			.css({"text-align": "center","color":"white"});
+
+							});
+							Crafty.scene("shipinterior");
 						}
 					});
 				return this;
